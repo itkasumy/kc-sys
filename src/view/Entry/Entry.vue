@@ -391,9 +391,7 @@ export default {
   padding-bottom .078125rem
   .cctv
     position relative
-    width 6.609375rem
-    height 4.083333rem
-    background url("../../assets/common/images/hel_videoBg.png") 0 0 / 100% 100% no-repeat
+    whb 6.609375rem, 4.083333rem, "../../assets/common/images/hel_videoBg.png"
     margin-right .052083rem
     .videoContent
       position absolute
@@ -405,8 +403,7 @@ export default {
       overflow hidden
       #my-video
         display block
-        width 6.520833rem
-        height 3.989583rem
+        widthHeight 6.520833rem, 3.989583rem
     .tongjilingContent
       position absolute
       left 50%
@@ -417,16 +414,13 @@ export default {
       background url("../../assets/common/images/tongjiling_bg.png") 0 0 / 100% 100% no-repeat
       z-index 100
       .tongjiInfoContent
-        width 3.125rem
-        height 2.083333rem
+        widthHeight 3.125rem, 2.083333rem
         transform translate(.520833rem, .520833rem)
         .baseInfo
           display flex
           height 1.041667rem
           .tongjiPhoto
-            width .8125rem
-            height .96875rem
-            background url("../../assets/common/images/113921558.jpg") 0 0 / 100% 100% no-repeat
+            whb .8125rem, .96875rem, "../../assets/common/images/113921558.jpg"
           .tontjiInfo
             li
               height .1875rem
@@ -460,12 +454,9 @@ export default {
         display flex
         height .9375rem
         .readFace
-          width .645833rem
-          height .645833rem
-          background url("../../assets/common/images/readFace_bg.png") 0 0 / 100% 100% no-repeat
+          whb .645833rem, .645833rem, "../../assets/common/images/readFace_bg.png"
           .face
-            width .645833rem
-            height .645833rem
+            widthHeight .645833rem, .645833rem
           .detectName
             width .645833rem
             padding-top .052083rem
@@ -487,12 +478,9 @@ export default {
             color #17d1ff
             font-size .083333rem
         .sourceFace
-          width .645833rem
-          height .645833rem
-          background url("../../assets/common/images/readFace_bg.png") 0 0 / 100% 100% no-repeat
+          whb .645833rem, .645833rem, "../../assets/common/images/readFace_bg.png"
           .face
-            width .645833rem
-            height .645833rem
+            widthHeight .645833rem, .645833rem
           .detectName
             width .645833rem
             padding-top .052083rem
@@ -525,8 +513,7 @@ export default {
         background url("../../assets/common/images/readFace_bg.png") 0 0 / 100% 100% no-repeat
         font-size 0
         img
-          width .625rem
-          height .625rem
+          widthHeight .625rem, .625rem
           border-radius 50%
       .ownerInfo, .peccancyInfo, .registerInfo
         .title
@@ -551,14 +538,12 @@ export default {
             color #d8edff
     .IDDetect
       .IDPhoto
-        width 1.25rem
-        height .9375rem
+        widthHeight 1.25rem, .9375rem
         border 2px solid #3db5ff
         margin 0 auto
         font-size 0
         img
-          width 1.25rem
-          height .9375rem
+          widthHeight 1.25rem, .9375rem
       .IDinfo
         .title
           height .125rem
@@ -600,21 +585,11 @@ export default {
       color #26b7ff
       cursor pointer
       .name
-        position absolute
-        top .416667rem
-        left 0
-        width 1.041667rem
-        height .104167rem
-        line-height .104167rem
+        posTop 1.041667rem, .104167rem, "", .416667rem
         text-align center
         font-size .083333rem
       .code
-        position absolute
-        top .520833rem
-        left 0
-        width 1.041667rem
-        height .104167rem
-        line-height .104167rem
+        posTop 1.041667rem, .104167rem, "", .520833rem
         text-align center
         font-size .0625rem
       &.active
@@ -624,62 +599,24 @@ export default {
         background url("../../assets/common/images/hel_deviceListBg_focus.png") .078125rem .078125rem / .885417rem .885417rem no-repeat
         color #d8fdff
         .name
-          position absolute
-          top .416667rem
-          left 0
-          width 1.041667rem
-          height .104167rem
-          line-height .104167rem
+          posTop 1.041667rem, .104167rem, "", .416667rem
           text-align center
           font-size .09375rem
           font-weight 600
         .code
-          position absolute
-          top .520833rem
-          left 0
-          width 1.041667rem
-          height .104167rem
-          line-height .104167rem
+          posTop 1.041667rem, .104167rem, "", .520833rem
           text-align center
           font-size .072917rem
   .arrowWrap
-    position absolute
-    right .15625rem
-    top .260417rem
-    width .208333rem
-    height .520833rem
+    posTopR .208333rem, .520833rem, "", .260417rem, .15625rem
     .arrUp
-      // position absolute
-      // top 0
-      // left 0
-      // width .208333rem
-      // height .208333rem
-      // background url("../../assets/common/images/hel_before.png") 0 0 / 100% 100% no-repeat
       posTop .208333rem, .208333rem, "../../assets/common/images/hel_before.png"
       cursor pointer
     .arrUpGray
-      // position absolute
-      // top 0
-      // left 0
-      // width .208333rem
-      // height .208333rem
-      // background url("../../assets/common/images/hel_before_disable.png") 0 0 / 100% 100% no-repeat
       posTop .208333rem, .208333rem, "../../assets/common/images/hel_before_disable.png"
     .arrDown
-      // position absolute
-      // bottom 0
-      // left 0
-      // width .208333rem
-      // height .208333rem
-      // background url("../../assets/common/images/hel_next.png") 0 0 / 100% 100% no-repeat
       posBtm .208333rem, .208333rem, "../../assets/common/images/hel_next.png"
       cursor pointer
     .arrDownGray
-      // position absolute
-      // bottom 0
-      // left 0
-      // width .208333rem
-      // height .208333rem
-      // background url("../../assets/common/images/hel_next_disable.png") 0 0 / 100% 100% no-repeat
       posBtm .208333rem, .208333rem, "../../assets/common/images/hel_next_disable.png"
 </style>

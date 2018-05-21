@@ -1,15 +1,38 @@
-posTop(WIDTH, HEIGHT, URL, TOP = 0, LEFT = 0)
+posTop(WIDTH, HEIGHT, URL, TOP = 0, LEFT = 0, LINEHEIGHT = HEIGHT)
   position absolute
   top TOP
   left LEFT
-  width WIDTH
-  height HEIGHT
-  background url(URL) 0 0 / 100% 100% no-repeat
+  line-height LINEHEIGHT
+  whb WIDTH, HEIGHT, URL
 
-posBtm(WIDTH, HEIGHT, URL, BOTTOM = 0, LEFT = 0)
+posBtm(WIDTH, HEIGHT, URL, BOTTOM = 0, LEFT = 0, LINEHEIGHT = HEIGHT)
   position absolute
   bottom BOTTOM
   left LEFT
+  line-height LINEHEIGHT
+  whb WIDTH, HEIGHT, URL
+
+posTopR(WIDTH, HEIGHT, URL, TOP = 0, RIGNT = 0, LINEHEIGHT = HEIGHT)
+  position absolute
+  top TOP
+  right RIGNT
+  line-height LINEHEIGHT
+  whb WIDTH, HEIGHT, URL
+
+posBtmR(WIDTH, HEIGHT, URL, BOTTOM = 0, RIGNT = 0, LINEHEIGHT = HEIGHT)
+  position absolute
+  bottom BOTTOM
+  right RIGNT
+  line-height LINEHEIGHT
+  whb WIDTH, HEIGHT, URL
+
+widthHeight(WIDTH, HEIGHT)
   width WIDTH
   height HEIGHT
+
+whb(WIDTH, HEIGHT, URL)
+  widthHeight WIDTH, HEIGHT
+  bg URL
+
+bg(URL)
   background url(URL) 0 0 / 100% 100% no-repeat
