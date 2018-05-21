@@ -1,16 +1,26 @@
 <template>
   <div id="app">
-    <div class="kcHeader"></div>
+    <div class="kcHeader">
+      <TopBar></TopBar>
+    </div>
     <div class="kcBody">
-      <div class="kcSideBar"></div>
-      <el-main>Main</el-main>
+      <div class="kcSideBar">
+        <LeftNav></LeftNav>
+      </div>
+      <el-main><router-view /></el-main>
     </div>
   </div>
 </template>
 
 <script>
+import TopBar from 'component/TopBar'
+import LeftNav from 'component/LeftNav'
 export default {
-  name: 'App'
+  name: 'App',
+  components: {
+    TopBar,
+    LeftNav
+  }
 }
 </script>
 
@@ -18,15 +28,14 @@ export default {
 #app
   height 100%
   .kcHeader
-    height 40px
-    background #ff2200
+    height .3125rem
   .kcBody
     display flex
-    height calc(100% - 40px)
+    height calc(100% - .3125rem)
     .kcSideBar
-      width 200px
+      width .510417rem
       height 100%
-      background #006699
+      background url("./assets/common/images/leftMenu_bg.png") 0 0 / 100% 100% no-repeat
     .el-main
-      padding 10px
+      padding .078125rem .052083rem .052083rem
 </style>

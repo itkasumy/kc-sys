@@ -3,10 +3,30 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>sys</title>
+    <title>智能头盔后台控制系统</title>
+    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.6&key=d0158ecea85c57072ee50572c3d30ea1"></script>
+    <script src="/static/js/sockjs.min.js"></script>
     <style>
       html, body, #app {
         height: 100%;
+      }
+      ul, li {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+      p {
+        margin: 0;
+      }
+    </style>
+    <script>
+      var html = document.querySelector('html');
+      var width = html.getBoundingClientRect().width;
+      html.style.fontSize = width / 10 + 'px';
+    </script>
+    <style>
+      body {
+        background: url("/static/images/bg.png") 0 0 / 100% 100% no-repeat;
       }
     </style>
   </head>
