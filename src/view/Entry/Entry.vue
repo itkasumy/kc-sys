@@ -55,63 +55,61 @@
           <div class="briefInfo">
             <div class="readFace">
               <div class="face"><img src="" alt=""></div>
-              <div class="detectName">姓名：吴慕雯</div>
             </div>
             <div class="semblance"><p class="xiangshidu">{{98.00809789.toFixed(2)}}%</p>相似度</div>
             <div class="sourceFace">
               <div class="face"></div>
-              <div class="detectName">姓名：吴慕雯</div>
             </div>
           </div>
           <div class="detailInfo">
             <ul>
               <li class="clearfix">
+                <span class="typeName">姓名</span>
+                <span class="typeVal">{{yryd.xm}}</span>
+              </li>
+              <li class="clearfix">
                 <span class="typeName">常用联系电话</span>
-                <span class="typeVal">09208355</span>
+                <span class="typeVal">{{yryd.cylxdh}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">上次来沪日期</span>
-                <span class="typeVal">2015-09-15 00:00:00</span>
+                <span class="typeVal">{{yryd.sclhrq}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">身份标签</span>
-                <span class="typeVal">未知</span>
+                <span class="typeVal">{{yryd.zdrysfbq ? yryd.zdrysfbq : "未知"}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">性别</span>
-                <span class="typeVal">男性</span>
+                <span class="typeVal">{{yryd.xb}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">出生日期</span>
-                <span class="typeVal">1985-06-01</span>
+                <span class="typeVal">{{yryd.csrq}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">证件号码</span>
-                <span class="typeVal">310229198506018315</span>
+                <span class="typeVal">{{yryd.zjhm}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">国籍</span>
-                <span class="typeVal">中国</span>
+                <span class="typeVal">{{yryd.gj}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">联系地址</span>
-                <span class="typeVal">上海市青浦区盈港东路6666号</span>
+                <span class="typeVal">{{yryd.lxdz}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">居住类型</span>
-                <span class="typeVal">其他</span>
+                <span class="typeVal">{{yryd.jzlx}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">是否有在逃记录</span>
-                <span class="typeVal">否</span>
-              </li>
-              <li class="clearfix">
-                <span class="typeName">是否在出租房产</span>
-                <span class="typeVal">否</span>
+                <span class="typeVal">{{yryd.sfyztkjl}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">是否有精神病史</span>
-                <span class="typeVal">否</span>
+                <span class="typeVal">{{yryd.sfyjsbs}}</span>
               </li>
             </ul>
           </div>
@@ -218,47 +216,47 @@
             <ul>
               <li class="clearfix">
                 <span class="typeName">姓名</span>
-                <span class="typeVal">齐尚吉</span>
+                <span class="typeVal">{{yryd.xm}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">上次来沪日期</span>
-                <span class="typeVal">2017-04-19 20:53:09</span>
+                <span class="typeVal">{{yryd.sclhrq}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">人员身份标签</span>
-                <span class="typeVal">nill</span>
+                <span class="typeVal">{{yryd.zdrysfbq ? yryd.zdrysfbq : "未知"}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">常用联系电话</span>
-                <span class="typeVal">1235546768</span>
+                <span class="typeVal">{{yryd.cylxdh}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">性别</span>
-                <span class="typeVal">男</span>
+                <span class="typeVal">{{yryd.xb}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">证件号码</span>
-                <span class="typeVal">622301199011283335</span>
+                <span class="typeVal">{{yryd.zjhm}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">国籍</span>
-                <span class="typeVal">中国</span>
+                <span class="typeVal">{{yryd.gj}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">联系地址</span>
-                <span class="typeVal">广东省深圳市南山区高新南一道8号创维大厦A座15楼西</span>
+                <span class="typeVal">{{yryd.lxdz}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">居住类型</span>
-                <span class="typeVal">暂住人口</span>
+                <span class="typeVal">{{yryd.jzlx}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">是否有在逃记录</span>
-                <span class="typeVal">否</span>
+                <span class="typeVal">{{yryd.sfyztkjl}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">是否有精神病史</span>
-                <span class="typeVal">否</span>
+                <span class="typeVal">{{yryd.sfyjsbs}}</span>
               </li>
             </ul>
           </div>
@@ -283,6 +281,7 @@
 </template>
 
 <script>
+import { getHelmatList } from 'http'
 export default {
   data () {
     return {
@@ -304,11 +303,16 @@ export default {
         }
       ],
       ycyd: {},
-      eTu: {}
+      eTu: {},
+      faceSimilar: {},
+      yryd: {},
+      heartTimer: null,
+      startTime: 0
     }
   },
   mounted () {
     this.initWebSocket()
+    this.getHelmatLists()
   },
   methods: {
     initWebSocket () {
@@ -326,6 +330,7 @@ export default {
         order: 'openAllMsgPush'
       }
       this.websocketSend(JSON.stringify(msg))
+      this.reset()
     },
     websocketSend (agentData) {
       this.threadPoxi(agentData)
@@ -333,6 +338,7 @@ export default {
     threadPoxi (agentData) {
       if (this.websocket.readyState === this.websocket.OPEN) {
         this.websocket.send(agentData)
+        // this.startTime = +new Date()
       } else if (this.websocket.readyState === this.websocket.CONNECTING) {
         setTimeout(() => this.websocket.send(agentData), 300)
       } else {
@@ -341,7 +347,7 @@ export default {
     },
     websocketOnMessage (e) {
       console.log(e.data)
-      if (e.data) {
+      if (e.data && e.data.resName !== 'heartBeat') {
         const resData = JSON.parse(e.data) || {}
         if (resData.resName === 'ycyd') {
           if (resData.ycyd && resData.success) {
@@ -364,20 +370,52 @@ export default {
           }
         } else if (resData.resName === 'Etu') {
           this.$set(this.eTu, 'oriPic', resData.oriPic)
+        } else if (resData.resName === 'yryd') {
+          // eslint-disable-next-line
+          const str = resData.yryd.replace(/\\/g, '').replace(/\s*/g, '').replace(/\"\{\"/g, '{"').replace(/\}\"\,/g, '},').replace(/\[\,\{/g, '[{')
+          const yryd = JSON.parse(str).data
+          this.$set(this.yryd, 'cylxdh', yryd.cylxdh)
+          this.$set(this.yryd, 'sclhrq', yryd.sclhrq)
+          this.$set(this.yryd, 'xb', yryd.xb)
+          this.$set(this.yryd, 'csrq', yryd.csrq)
+          this.$set(this.yryd, 'zjhm', yryd.zjhm)
+          this.$set(this.yryd, 'gj', yryd.gj)
+          this.$set(this.yryd, 'lxdz', yryd.lxdz)
+          this.$set(this.yryd, 'jzlx', yryd.jzlx)
+          this.$set(this.yryd, 'sfyztkjl', yryd.sfyztkjl)
+          this.$set(this.yryd, 'sfyjsbs', yryd.sfyjsbs)
+          this.$set(this.yryd, 'xm', yryd.xm)
+          this.$set(this.yryd, 'zdrysfbq', yryd.zdrysfbq)
+          console.log(yryd)
         }
       }
     },
     websocketClose (e) {
-      console.log(`connection closed (${e.code})`)
+      clearInterval(this.heartTimer)
+      // console.log(`connection closed (${e.code})`, +new Date() - this.startTime)
     },
     websocketOnError (e) {
       console.log(`error ${e}`)
+    },
+    start () {
+      this.heartTimer = setInterval(() => {
+        this.websocketSend('heartBeat')
+      }, 10000)
+    },
+    reset () {
+      clearInterval(this.heartTimer)
+      this.start()
     },
     handHelmat (item) {
       this.helmats.forEach(ele => {
         ele.isActive = false
       })
       item.isActive = true
+    },
+    getHelmatLists () {
+      getHelmatList().then(data => {
+        console.log(data)
+      })
     }
   }
 }

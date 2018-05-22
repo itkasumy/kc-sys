@@ -20,9 +20,13 @@
       }
     </style>
     <script>
-      var html = document.querySelector('html');
-      var width = html.getBoundingClientRect().width;
-      html.style.fontSize = width / 10 + 'px';
+      function setRootFontsize () {
+        var html = document.querySelector('html');
+        var width = html.getBoundingClientRect().width;
+        html.style.fontSize = width / 10 + 'px';
+      }
+      setRootFontsize()
+      onresize = setRootFontsize()
     </script>
     <style>
       body {
