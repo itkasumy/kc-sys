@@ -4,9 +4,9 @@
       <div class="cctv">
         <div class="videoContent">
           <video id="my-video" class="video-js" controls preload="auto" poster="../../assets/common/images/loading.gif" data-setup="{}">
-            <source src="rtmp://47.106.10.7:10082/hls/1234" type="rtmp/flv">
+            <source src="rtmp://47.106.10.7:10082/live/456" type="rtmp/flv">
             <!-- 如果上面的rtmp流无法播放，就播放hls流 -->
-            <!-- <source src="http://10.10.5.119/live/livestream.m3u8" type='application/x-mpegURL'> -->
+            <!-- <source src="rtmp://47.106.10.7:10082/live/456" type='application/x-mpegURL'> -->
             <p class="vjs-no-js">
               播放视频需要启用 JavaScript，推荐使用支持HTML5的浏览器访问。
               To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
@@ -264,16 +264,19 @@
       </div>
     </div>
     <div class="bottomContent">
-      <ul class="matchListWrap">
-        <li class="matchList" v-for="item in helmats" :key="item.id" :class="{active: item.isActive}" @click="handHelmat(item)">
-          <div class="name">{{item.name}}</div>
-          <div class="code">{{item.code}}</div>
+      <ul class="matchListWrap" ref="matchListWrap" :style="{
+        height: `${1.041667 * cols}rem`,
+        top: `${-1.041667 * (curCol - 1)}rem`
+      }">
+        <li class="matchList" v-for="item in helmatList" :key="item.id" :class="{active: item.isActive}" @click="handHelmat(item)">
+          <div class="name">{{item.police.policeName}}</div>
+          <div class="code">{{item.deviceNum}}</div>
         </li>
       </ul>
       <div class="arrowWrap">
-        <div v-if="false" class="arrUp"></div>
+        <div v-if="curCol > 1" class="arrUp" @click="lookUp"></div>
         <div v-else class="arrUpGray"></div>
-        <div v-if="true" class="arrDown"></div>
+        <div v-if="cols > 1 && curCol < cols" class="arrDown" @click="lookDown"></div>
         <div v-else class="arrDownGray"></div>
       </div>
     </div>
@@ -288,31 +291,21 @@ export default {
       websocket: null,
       faceDetectShow: false,
       plateNumberDetectShow: false,
-      helmats: [
-        {
-          id: 1,
-          name: 'zhangsan',
-          code: 123456,
-          isActive: false
-        },
-        {
-          id: 2,
-          name: 'lisi',
-          code: 123456,
-          isActive: false
-        }
-      ],
       ycyd: {},
       eTu: {},
       faceSimilar: {},
       yryd: {},
       heartTimer: null,
-      startTime: 0
+      startTime: 0,
+      helmatList: [],
+      cols: 1,
+      curCol: 1
     }
   },
   mounted () {
     this.initWebSocket()
     this.getHelmatLists()
+    require('common/js/video')
   },
   methods: {
     initWebSocket () {
@@ -372,7 +365,7 @@ export default {
           this.$set(this.eTu, 'oriPic', resData.oriPic)
         } else if (resData.resName === 'yryd') {
           // eslint-disable-next-line
-          const str = resData.yryd.replace(/\\/g, '').replace(/\s*/g, '').replace(/\"\{\"/g, '{"').replace(/\}\"\,/g, '},').replace(/\[\,\{/g, '[{')
+          const str = resData.yryd.body.replace(/\\/g, '').replace(/\s*/g, '').replace(/\"\{\"/g, '{"').replace(/\}\"\,/g, '},').replace(/\[\,\{/g, '[{')
           const yryd = JSON.parse(str).data
           this.$set(this.yryd, 'cylxdh', yryd.cylxdh)
           this.$set(this.yryd, 'sclhrq', yryd.sclhrq)
@@ -406,16 +399,33 @@ export default {
       clearInterval(this.heartTimer)
       this.start()
     },
+    getHelmatLists () {
+      getHelmatList().then(data => {
+        console.log(data)
+        data.data.obj.forEach(item => {
+          item.isActive = false
+          this.helmatList.push(item)
+        })
+        this.cols = Math.ceil(this.helmatList.length / 8)
+      })
+    },
     handHelmat (item) {
-      this.helmats.forEach(ele => {
+      this.helmatList.forEach(ele => {
         ele.isActive = false
       })
       item.isActive = true
     },
-    getHelmatLists () {
-      getHelmatList().then(data => {
-        console.log(data)
-      })
+    lookUp () {
+      this.curCol--
+      if (this.curCol < 1) {
+        this.curCol = 1
+      }
+    },
+    lookDown () {
+      this.curCol++
+      if (this.curCol > this.cols) {
+        this.curCol = this.cols
+      }
     }
   }
 }
@@ -532,11 +542,20 @@ export default {
           line-height .15625rem
         .typeName
           float left
-          width .4375rem
+          width .625rem
+          height .15625rem
+          overflow hidden
+          text-overflow ellipsis
+          white-space nowrap
           color #a1b3c2
         .typeVal
           float left
           margin-left .375rem
+          max-width .9375rem
+          height .15625rem
+          overflow hidden
+          text-overflow ellipsis
+          white-space nowrap
           color #d8edff
       .divideLine
         height .010417rem
@@ -568,11 +587,20 @@ export default {
           font-size .0625rem
           .typeName
             float left
-            width .520833rem
+            width .625rem
+            height .15625rem
+            overflow hidden
+            text-overflow ellipsis
+            white-space nowrap
             color #a1b3c2
           .typeVal
             float left
             margin-left .375rem
+            max-width .9375rem
+            height .15625rem
+            overflow hidden
+            text-overflow ellipsis
+            white-space nowrap
             color #d8edff
     .IDDetect
       .IDPhoto
@@ -597,21 +625,30 @@ export default {
           font-size .0625rem
           .typeName
             float left
-            width .520833rem
+            width .625rem
+            height .15625rem
+            overflow hidden
+            text-overflow ellipsis
+            white-space nowrap
             color #a1b3c2
           .typeVal
             float left
-            width 1.25rem
-            margin-left .208333rem
+            margin-left .375rem
+            max-width .9375rem
+            height .15625rem
+            overflow hidden
+            text-overflow ellipsis
+            white-space nowrap
             color #d8edff
 .bottomContent
   position relative
   height 1.041667rem
   padding-right .364583rem
   background url("../../assets/common/images/hel_deviceListBg.png") 0 0 / 100% 100% no-repeat
+  overflow hidden
   .matchListWrap
-    height 1.041667rem
-    overflow hidden
+    position absolute
+    width 8.4375rem
     .matchList
       float left
       position relative
