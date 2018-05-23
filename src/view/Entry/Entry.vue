@@ -295,7 +295,6 @@ export default {
       ycyd: {},
       yryd: {},
       eTuList: [],
-      faceDetectList: [],
       heartTimer: null,
       helmatList: [],
       cols: 1,
@@ -348,7 +347,6 @@ export default {
           this.IDDetectShow = false
           this.plateNumberDetectShow = true
           this.yryd = {}
-          this.faceDetectList.splice(0)
           this.eTuList.splice(0)
           if (resData.ycyd && resData.success) {
             const obj = resData.ycyd.data
@@ -369,41 +367,40 @@ export default {
             }
           }
         } else if (resData.resName === 'Etu') {
+          this.faceDetectShow = true
+          this.IDDetectShow = false
+          this.plateNumberDetectShow = false
+          this.ycyd = {}
+          this.yryd = {}
           const faceDetect = {}
           faceDetect.oriPic = resData.oriPic
-          faceDetect.mark = resData.mark
           faceDetect.searchPic = resData.etuMsg.image_list[0].user_image
           faceDetect.similarity = resData.etuPic.similarity
-          let flag = true
-          this.eTuList.forEach(item => {
-            if (item.mark === faceDetect.mark) {
-              flag = false
-              for (let key in faceDetect) {
-                this.$set(item, key, faceDetect[key])
-              }
-            }
-          })
-          if (flag) {
-            this.eTuList.push({})
-            for (let key in faceDetect) {
-              this.$set(this.eTuList[this.eTuList.length - 1], key, faceDetect[key])
-            }
+          // eslint-disable-next-line
+          const str = resData.etuMsg.userInfo.body.replace(/\\/g, '').replace(/\s*/g, '').replace(/\"\{\"/g, '{"').replace(/\}\"\,/g, '},').replace(/\[\,\{/g, '[{')
+          const yryd = JSON.parse(str).data
+          faceDetect.cylxdh = yryd.cylxdh
+          faceDetect.sclhrq = yryd.sclhrq
+          faceDetect.xb = yryd.xb
+          faceDetect.csrq = yryd.csrq
+          faceDetect.zjhm = yryd.zjhm
+          faceDetect.gj = yryd.gj
+          faceDetect.lxdz = yryd.lxdz
+          faceDetect.jzlx = yryd.jzlx
+          faceDetect.sfyztkjl = yryd.sfyztkjl
+          faceDetect.sfyjsbs = yryd.sfyjsbs
+          faceDetect.xm = yryd.xm
+          faceDetect.zdrysfbq = yryd.zdrysfbq
+          this.eTuList.push({})
+          for (let key in faceDetect) {
+            this.$set(this.eTuList[this.eTuList.length - 1], key, faceDetect[key])
           }
         } else if (resData.resName === 'yryd') {
-          if (e.data.mark) {
-            this.faceDetectShow = true
-            this.IDDetectShow = false
-            this.plateNumberDetectShow = false
-            this.ycyd = {}
-            this.yryd = {}
-          } else {
-            this.faceDetectShow = false
-            this.IDDetectShow = true
-            this.plateNumberDetectShow = false
-            this.eTuList.splice(0)
-            this.ycyd = {}
-            this.yryd = {}
-          }
+          this.faceDetectShow = false
+          this.IDDetectShow = true
+          this.plateNumberDetectShow = false
+          this.eTuList.splice(0)
+          this.ycyd = {}
           // eslint-disable-next-line
           const str = resData.yryd.body.replace(/\\/g, '').replace(/\s*/g, '').replace(/\"\{\"/g, '{"').replace(/\}\"\,/g, '},').replace(/\[\,\{/g, '[{')
           const yryd = JSON.parse(str).data
@@ -420,24 +417,6 @@ export default {
           this.$set(this.yryd, 'xm', yryd.xm)
           this.$set(this.yryd, 'zdrysfbq', yryd.zdrysfbq)
           console.log(yryd)
-          if (e.data.mark) {
-            this.$set(this.yryd, 'mark', e.data.mark)
-            let flag = true
-            this.eTuList.forEach(item => {
-              if (item.mark === this.yryd.mark) {
-                flag = false
-                for (let key in this.yryd) {
-                  this.$set(item, key, this.yryd[key])
-                }
-              }
-            })
-            if (flag) {
-              this.eTuList.push({})
-              for (let key in this.yryd) {
-                this.$set(this.eTuList[this.eTuList.length - 1], key, this.yryd[key])
-              }
-            }
-          }
         }
       }
     },
@@ -458,6 +437,7 @@ export default {
       this.start()
     },
     getHelmatLists () {
+      this.helmatList.splice(0)
       getHelmatList().then(data => {
         data.data.obj.forEach(item => {
           item.isActive = false
@@ -504,24 +484,15 @@ export default {
     whb 6.609375rem, 4.083333rem, "../../assets/common/images/hel_videoBg.png"
     margin-right .052083rem
     .videoContent
-      position absolute
-      top .052083rem
-      left .046875rem
-      width 6.520833rem
-      height 3.989583rem
+      posTop 6.520833rem, 3.989583rem, "", .052083rem, .046875rem
       border-radius .052083rem
       overflow hidden
       #my-video
         display block
         widthHeight 6.520833rem, 3.989583rem
     .tongjilingContent
-      position absolute
-      left 50%
-      top 50%
-      width 4.166667rem
-      height 3.125rem
+      posTop 4.166667rem, 3.125rem, "../../assets/common/images/tongjiling_bg.png", 50%, 50%
       transform translate(-50%, -50%)
-      background url("../../assets/common/images/tongjiling_bg.png") 0 0 / 100% 100% no-repeat
       z-index 100
       .tongjiInfoContent
         widthHeight 3.125rem, 2.083333rem
@@ -554,10 +525,7 @@ export default {
           color #fff
           text-indent 2em
   .infoContent
-    width 2.083333rem
-    height 3.645833rem
-    padding .208333rem .3125rem
-    background url("../../assets/common/images/readContentBg.png") 0 0 / 100% 100% no-repeat
+    whpb 2.083333rem, 3.645833rem, .208333rem .3125rem, "../../assets/common/images/readContentBg.png"
     overflow-y scroll
     .faceDetect
       .briefInfo
@@ -570,16 +538,17 @@ export default {
           .detectName
             width .645833rem
             padding-top .052083rem
-            text-align center
+            ta()
             font-size .072917rem
             color #d8edff
         .semblance
-          width .395833rem
-          height .208333rem
-          padding-top .052083rem
-          background url("../../assets/common/images/semblance_bg.png") 0 0 / 100% 100%
+          // width .395833rem
+          // height .208333rem
+          // padding-top .052083rem
+          // background url("../../assets/common/images/semblance_bg.png") 0 0 / 100% 100%
+          whpb .395833rem, .208333rem, .052083rem 0 0, "../../assets/common/images/semblance_bg.png"
           margin .1875rem .197917rem
-          text-align center
+          ta()
           color #d8edff
           font-size .0625rem
           .xiangshidu
@@ -594,7 +563,7 @@ export default {
           .detectName
             width .645833rem
             padding-top .052083rem
-            text-align center
+            ta()
             font-size .072917rem
             color #d8edff
       .detailInfo
@@ -606,30 +575,27 @@ export default {
           float left
           width .625rem
           height .15625rem
-          overflow hidden
-          text-overflow ellipsis
-          white-space nowrap
+          textoverflow()
           color #a1b3c2
         .typeVal
           float left
           margin-left .375rem
           max-width .9375rem
           height .15625rem
-          overflow hidden
-          text-overflow ellipsis
-          white-space nowrap
+          textoverflow()
           color #d8edff
       .divideLine
         height .010417rem
-        background url("../../assets/common/images/readContentBg_top.png") 0 0 / 100% 100% no-repeat
+        bg "../../assets/common/images/readContentBg_top.png"
         margin .208333rem 0
     .plateNumberDetect
       .plateNuberPhoto
-        width .625rem
-        height .625rem
-        padding .010417rem
+        // width .625rem
+        // height .625rem
+        // padding .010417rem
         margin 0 auto
-        background url("../../assets/common/images/readFace_bg.png") 0 0 / 100% 100% no-repeat
+        // background url("../../assets/common/images/readFace_bg.png") 0 0 / 100% 100% no-repeat
+        whpb .625rem, .625rem, .010417rem, "../../assets/common/images/readFace_bg.png"
         font-size 0
         img
           widthHeight .625rem, .625rem
@@ -706,7 +672,7 @@ export default {
   position relative
   height 1.041667rem
   padding-right .364583rem
-  background url("../../assets/common/images/hel_deviceListBg.png") 0 0 / 100% 100% no-repeat
+  bg "../../assets/common/images/hel_deviceListBg.png"
   overflow hidden
   .matchListWrap
     position absolute
@@ -714,35 +680,29 @@ export default {
     .matchList
       float left
       position relative
-      width .645833rem
-      height .645833rem
-      padding .197917rem
-      text-align center
-      background url("../../assets/common/images/hel_deviceBg.png") .197917rem .197917rem / .645833rem .645833rem no-repeat
+      whpb_ .645833rem, .645833rem, .197917rem, "../../assets/common/images/hel_deviceBg.png", .197917rem, .197917rem, .645833rem, .645833rem
+      ta()
       color #26b7ff
       cursor pointer
       .name
         posTop 1.041667rem, .104167rem, "", .416667rem
-        text-align center
+        ta()
         font-size .083333rem
       .code
         posTop 1.041667rem, .104167rem, "", .520833rem
-        text-align center
+        ta()
         font-size .0625rem
       &.active
-        width .885417rem
-        height .885417rem
-        padding .078125rem
-        background url("../../assets/common/images/hel_deviceListBg_focus.png") .078125rem .078125rem / .885417rem .885417rem no-repeat
+        whpb_ .885417rem, .885417rem, .078125rem, "../../assets/common/images/hel_deviceListBg_focus.png", .078125rem, .078125rem, .885417rem, .885417rem
         color #d8fdff
         .name
           posTop 1.041667rem, .104167rem, "", .416667rem
-          text-align center
+          ta()
           font-size .09375rem
           font-weight 600
         .code
           posTop 1.041667rem, .104167rem, "", .520833rem
-          text-align center
+          ta()
           font-size .072917rem
   .arrowWrap
     posTopR .208333rem, .520833rem, "", .260417rem, .15625rem
