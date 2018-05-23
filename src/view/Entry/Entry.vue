@@ -3,8 +3,8 @@
     <div class="topContainer">
       <div class="cctv">
         <div class="videoContent">
-          <video id="my-video" class="video-js" controls preload="auto" poster="../../assets/common/images/loading.gif" data-setup="{}">
-            <source src="rtmp://47.106.10.7:10082/live/456" type="rtmp/flv">
+          <video id="my-video" ref="videoPlayer" class="video-js" controls preload="auto" poster="../../assets/common/images/loading.gif" data-setup="{}">
+            <source :src="rtmpUrl" type="rtmp/flv">
             <!-- 如果上面的rtmp流无法播放，就播放hls流 -->
             <!-- <source src="rtmp://47.106.10.7:10082/live/456" type='application/x-mpegURL'> -->
             <p class="vjs-no-js">
@@ -51,65 +51,65 @@
         </div>
       </div>
       <div class="infoContent">
-        <div class="faceDetect">
+        <div class="faceDetect" v-show="faceDetectShow" v-for="item in eTuList" :key="item.mark">
           <div class="briefInfo">
             <div class="readFace">
-              <div class="face"><img src="" alt=""></div>
+              <div class="face"><img :src="item.oriPic" alt=""></div>
             </div>
-            <div class="semblance"><p class="xiangshidu">{{98.00809789.toFixed(2)}}%</p>相似度</div>
+            <div class="semblance"><p class="xiangshidu">{{item.similarity.toFixed(2)}}%</p>相似度</div>
             <div class="sourceFace">
-              <div class="face"></div>
+              <div class="face"><img :src="`data:image/png;base64${item.searchPic}`" alt=""></div>
             </div>
           </div>
           <div class="detailInfo">
             <ul>
               <li class="clearfix">
                 <span class="typeName">姓名</span>
-                <span class="typeVal">{{yryd.xm}}</span>
+                <span class="typeVal">{{item.xm}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">常用联系电话</span>
-                <span class="typeVal">{{yryd.cylxdh}}</span>
+                <span class="typeVal">{{item.cylxdh}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">上次来沪日期</span>
-                <span class="typeVal">{{yryd.sclhrq}}</span>
+                <span class="typeVal">{{item.sclhrq}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">身份标签</span>
-                <span class="typeVal">{{yryd.zdrysfbq ? yryd.zdrysfbq : "未知"}}</span>
+                <span class="typeVal">{{item.zdrysfbq ? item.zdrysfbq : "未知"}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">性别</span>
-                <span class="typeVal">{{yryd.xb}}</span>
+                <span class="typeVal">{{item.xb}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">出生日期</span>
-                <span class="typeVal">{{yryd.csrq}}</span>
+                <span class="typeVal">{{item.csrq}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">证件号码</span>
-                <span class="typeVal">{{yryd.zjhm}}</span>
+                <span class="typeVal">{{item.zjhm}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">国籍</span>
-                <span class="typeVal">{{yryd.gj}}</span>
+                <span class="typeVal">{{item.gj}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">联系地址</span>
-                <span class="typeVal">{{yryd.lxdz}}</span>
+                <span class="typeVal">{{item.lxdz}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">居住类型</span>
-                <span class="typeVal">{{yryd.jzlx}}</span>
+                <span class="typeVal">{{item.jzlx}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">是否有在逃记录</span>
-                <span class="typeVal">{{yryd.sfyztkjl}}</span>
+                <span class="typeVal">{{item.sfyztkjl}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">是否有精神病史</span>
-                <span class="typeVal">{{yryd.sfyjsbs}}</span>
+                <span class="typeVal">{{item.sfyjsbs}}</span>
               </li>
             </ul>
           </div>
@@ -207,7 +207,7 @@
             </ul>
           </div>
         </div>
-        <div class="IDDetect" v-show="false">
+        <div class="IDDetect" v-show="IDDetectShow">
           <div class="IDPhoto">
             <img src="../../assets/common/images/113921558.jpg" alt="">
           </div>
@@ -291,15 +291,21 @@ export default {
       websocket: null,
       faceDetectShow: false,
       plateNumberDetectShow: false,
+      IDDetectShow: false,
       ycyd: {},
-      eTu: {},
-      faceSimilar: {},
       yryd: {},
+      eTuList: [],
+      faceDetectList: [],
       heartTimer: null,
-      startTime: 0,
       helmatList: [],
       cols: 1,
-      curCol: 1
+      curCol: 1,
+      rtmpUrl: 'rtmp://47.106.10.7:10082/live/456',
+      bookingInfo: {
+        deviceId: '',
+        order: 'openAllMsgPush',
+        liveId: ''
+      }
     }
   },
   mounted () {
@@ -309,7 +315,7 @@ export default {
   },
   methods: {
     initWebSocket () {
-      // this.websocket = new WebSocket('ws://192.168.0.115:8080/websocket.action')
+      // this.websocket = new WebSocket('ws://192.168.0.117:8080/websocket.action')
       this.websocket = new WebSocket('wss://zntk.police.sh.cn/websocket.action')
       this.websocket.onopen = this.websocketOnOpen
       this.websocket.onmessage = this.websocketOnMessage
@@ -318,11 +324,7 @@ export default {
     },
     websocketOnOpen (e) {
       console.log(`open ${e}`)
-      const msg = {
-        deviceId: '',
-        order: 'openAllMsgPush'
-      }
-      this.websocketSend(JSON.stringify(msg))
+      this.websocketSend(JSON.stringify(this.bookingInfo))
       this.reset()
     },
     websocketSend (agentData) {
@@ -331,7 +333,6 @@ export default {
     threadPoxi (agentData) {
       if (this.websocket.readyState === this.websocket.OPEN) {
         this.websocket.send(agentData)
-        // this.startTime = +new Date()
       } else if (this.websocket.readyState === this.websocket.CONNECTING) {
         setTimeout(() => this.websocket.send(agentData), 300)
       } else {
@@ -343,6 +344,12 @@ export default {
       if (e.data && e.data.resName !== 'heartBeat') {
         const resData = JSON.parse(e.data) || {}
         if (resData.resName === 'ycyd') {
+          this.faceDetectShow = false
+          this.IDDetectShow = false
+          this.plateNumberDetectShow = true
+          this.yryd = {}
+          this.faceDetectList.splice(0)
+          this.eTuList.splice(0)
           if (resData.ycyd && resData.success) {
             const obj = resData.ycyd.data
             for (const key in obj) {
@@ -362,8 +369,41 @@ export default {
             }
           }
         } else if (resData.resName === 'Etu') {
-          this.$set(this.eTu, 'oriPic', resData.oriPic)
+          const faceDetect = {}
+          faceDetect.oriPic = resData.oriPic
+          faceDetect.mark = resData.mark
+          faceDetect.searchPic = resData.etuMsg.image_list[0].user_image
+          faceDetect.similarity = resData.etuPic.similarity
+          let flag = true
+          this.eTuList.forEach(item => {
+            if (item.mark === faceDetect.mark) {
+              flag = false
+              for (let key in faceDetect) {
+                this.$set(item, key, faceDetect[key])
+              }
+            }
+          })
+          if (flag) {
+            this.eTuList.push({})
+            for (let key in faceDetect) {
+              this.$set(this.eTuList[this.eTuList.length - 1], key, faceDetect[key])
+            }
+          }
         } else if (resData.resName === 'yryd') {
+          if (e.data.mark) {
+            this.faceDetectShow = true
+            this.IDDetectShow = false
+            this.plateNumberDetectShow = false
+            this.ycyd = {}
+            this.yryd = {}
+          } else {
+            this.faceDetectShow = false
+            this.IDDetectShow = true
+            this.plateNumberDetectShow = false
+            this.eTuList.splice(0)
+            this.ycyd = {}
+            this.yryd = {}
+          }
           // eslint-disable-next-line
           const str = resData.yryd.body.replace(/\\/g, '').replace(/\s*/g, '').replace(/\"\{\"/g, '{"').replace(/\}\"\,/g, '},').replace(/\[\,\{/g, '[{')
           const yryd = JSON.parse(str).data
@@ -380,12 +420,30 @@ export default {
           this.$set(this.yryd, 'xm', yryd.xm)
           this.$set(this.yryd, 'zdrysfbq', yryd.zdrysfbq)
           console.log(yryd)
+          if (e.data.mark) {
+            this.$set(this.yryd, 'mark', e.data.mark)
+            let flag = true
+            this.eTuList.forEach(item => {
+              if (item.mark === this.yryd.mark) {
+                flag = false
+                for (let key in this.yryd) {
+                  this.$set(item, key, this.yryd[key])
+                }
+              }
+            })
+            if (flag) {
+              this.eTuList.push({})
+              for (let key in this.yryd) {
+                this.$set(this.eTuList[this.eTuList.length - 1], key, this.yryd[key])
+              }
+            }
+          }
         }
       }
     },
     websocketClose (e) {
       clearInterval(this.heartTimer)
-      // console.log(`connection closed (${e.code})`, +new Date() - this.startTime)
+      console.log(`connection closed (${e.code})`)
     },
     websocketOnError (e) {
       console.log(`error ${e}`)
@@ -401,7 +459,6 @@ export default {
     },
     getHelmatLists () {
       getHelmatList().then(data => {
-        console.log(data)
         data.data.obj.forEach(item => {
           item.isActive = false
           this.helmatList.push(item)
@@ -414,6 +471,11 @@ export default {
         ele.isActive = false
       })
       item.isActive = true
+      this.rtmpUrl = `rtmp://47.106.10.7:10082/live/${item.id}`
+      this.$set(this.bookingInfo, 'deviceId', item.deviceNum)
+      this.$set(this.bookingInfo, 'order', 'live')
+      this.$set(this.bookingInfo, 'liveId', item.id)
+      this.websocketSend(JSON.stringify(this.bookingInfo))
     },
     lookUp () {
       this.curCol--
