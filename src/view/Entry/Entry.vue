@@ -3,10 +3,12 @@
     <div class="topContainer">
       <div class="cctv">
         <div class="videoContent">
-          <video id="my-video" ref="videoPlayer" class="video-js" controls preload="auto" poster="../../assets/common/images/loading.gif" data-setup="{}">
+          <video id="my-video" ref="videoPlayer" class="video-js" controls preload="auto" poster="../../assets/common/images/loading.gif" data-setup="{}" autoplay>
             <source :src="rtmpUrl" type="rtmp/flv">
+            <!-- <source src="rtmp://zntk.police.sh.cn:10554/live/456" type="rtmp/flv"> -->
+            <!-- <source :src="rtmpUrl" type='application/x-mpegURL' v-else> -->
+            <!-- <source src="rtmp://www.easydss.com:10085/live/123456" type="rtmp/flv"> -->
             <!-- 如果上面的rtmp流无法播放，就播放hls流 -->
-            <!-- <source src="rtmp://47.106.10.7:10082/live/456" type='application/x-mpegURL'> -->
             <p class="vjs-no-js">
               播放视频需要启用 JavaScript，推荐使用支持HTML5的浏览器访问。
               To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
@@ -51,14 +53,14 @@
         </div>
       </div>
       <div class="infoContent">
-        <div class="faceDetect" v-show="faceDetectShow" v-for="item in eTuList" :key="item.mark">
+        <div class="faceDetect" v-show="faceDetectShow" v-for="(item, index) in eTuList" :key="index">
           <div class="briefInfo">
             <div class="readFace">
               <div class="face"><img :src="item.oriPic" alt=""></div>
             </div>
-            <div class="semblance"><p class="xiangshidu">{{item.similarity.toFixed(2)}}%</p>相似度</div>
+            <div class="semblance"><p class="xiangshidu">{{item.similarity ? Number(item.similarity).toFixed(2) : 0}}%</p>相似度</div>
             <div class="sourceFace">
-              <div class="face"><img :src="`data:image/png;base64${item.searchPic}`" alt=""></div>
+              <div class="face"><img :src="`data:image/png;base64,${item.searchPic}`" alt=""></div>
             </div>
           </div>
           <div class="detailInfo">
@@ -69,7 +71,7 @@
               </li>
               <li class="clearfix">
                 <span class="typeName">常用联系电话</span>
-                <span class="typeVal">{{item.cylxdh}}</span>
+                <span class="typeVal">{{item.cylxdh || '暂无'}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">上次来沪日期</span>
@@ -117,22 +119,26 @@
         </div>
         <div class="plateNumberDetect" v-show="plateNumberDetectShow">
           <div class="plateNuberPhoto">
-            <img src="../../assets/common/images/113921558.jpg" alt="">
+            <img :src="ycyd.ycydPic" alt="">
           </div>
           <div class="ownerInfo">
             <div class="title">车主信息</div>
             <ul>
               <li class="clearfix">
                 <span class="typeName">车牌号</span>
-                <span class="typeVal">{{ycyd.HPHM}}</span>
+                <span class="typeVal">{{ycyd.djHPHM ? ycyd.djHPHM : ycyd.plateNum}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">姓名</span>
-                <span class="typeVal">{{ycyd.XM}}</span>
+                <span class="typeVal">{{ycyd.xM}}</span>
+              </li>
+              <li class="clearfix">
+                <span class="typeName">性别</span>
+                <span class="typeVal">{{ycyd.xB}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">住所地址</span>
-                <span class="typeVal">{{ycyd.ZSXXDZ}}</span>
+                <span class="typeVal">{{ycyd.zSXXDZ}}</span>
               </li>
             </ul>
           </div>
@@ -141,19 +147,19 @@
             <ul>
               <li class="clearfix">
                 <span class="typeName">违章处理机构</span>
-                <span class="typeVal">{{ycyd.CLJGMC}}</span>
+                <span class="typeVal">{{ycyd.wfCLJGMC}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">违法地址</span>
-                <span class="typeVal">{{ycyd.WFDZ}}</span>
+                <span class="typeVal">{{ycyd.wfWFDZ}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">违法时间</span>
-                <span class="typeVal">{{ycyd.WFSJ}}</span>
+                <span class="typeVal">{{ycyd.wfWFSJ}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">处理时间</span>
-                <span class="typeVal">{{ycyd.CLSJ}}</span>
+                <span class="typeVal">{{ycyd.wfCLSJ}}</span>
               </li>
             </ul>
           </div>
@@ -162,54 +168,54 @@
             <ul>
               <li class="clearfix">
                 <span class="typeName">出厂日期</span>
-                <span class="typeVal">{{ycyd.CCRQ}}</span>
+                <span class="typeVal">{{ycyd.djCCRQ}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">初次登记日期</span>
-                <span class="typeVal">{{ycyd.CCDJRQ}}</span>
+                <span class="typeVal">{{ycyd.djCCDJRQ}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">登记日期</span>
-                <span class="typeVal">{{ycyd.DJRQ}}</span>
+                <span class="typeVal">{{ycyd.djDJRQ}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">总质量</span>
-                <span class="typeVal">{{ycyd.ZZL}}</span>
+                <span class="typeVal">{{ycyd.djZZL}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">使用性质</span>
-                <span class="typeVal">{{ycyd.SYXZ}}</span>
+                <span class="typeVal">{{ycyd.djSYXZ}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">车身颜色</span>
-                <span class="typeVal">{{ycyd.CSYS}}</span>
+                <span class="typeVal">{{ycyd.djCSYS}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">车外廓宽</span>
-                <span class="typeVal">{{ycyd.CWKK}}</span>
+                <span class="typeVal">{{ycyd.djCWKK}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">车外廓高</span>
-                <span class="typeVal">{{ycyd.CWKG}}</span>
+                <span class="typeVal">{{ycyd.djCWKG}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">车外廓长</span>
-                <span class="typeVal">{{ycyd.CWKC}}</span>
+                <span class="typeVal">{{ycyd.djCWKC}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">中文品牌</span>
-                <span class="typeVal">{{ycyd.CLPP1}}</span>
+                <span class="typeVal">{{ycyd.djCLPP1}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">发动机号</span>
-                <span class="typeVal">{{ycyd.FDJH}}</span>
+                <span class="typeVal">{{ycyd.djFDJH}}</span>
               </li>
             </ul>
           </div>
         </div>
         <div class="IDDetect" v-show="IDDetectShow">
           <div class="IDPhoto">
-            <img src="../../assets/common/images/113921558.jpg" alt="">
+            <img :src="yryd.yrydPic" alt="">
           </div>
           <div class="IDinfo">
             <div class="title">身份信息</div>
@@ -219,8 +225,20 @@
                 <span class="typeVal">{{yryd.xm}}</span>
               </li>
               <li class="clearfix">
+                <span class="typeName">性别</span>
+                <span class="typeVal">{{yryd.xb}}</span>
+              </li>
+              <li class="clearfix">
+                <span class="typeName">出生日期</span>
+                <span class="typeVal">{{yryd.csrq}}</span>
+              </li>
+              <li class="clearfix">
                 <span class="typeName">上次来沪日期</span>
                 <span class="typeVal">{{yryd.sclhrq}}</span>
+              </li>
+              <li class="clearfix">
+                <span class="typeName">证件号码</span>
+                <span class="typeVal">{{yryd.zjhm}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">人员身份标签</span>
@@ -228,15 +246,7 @@
               </li>
               <li class="clearfix">
                 <span class="typeName">常用联系电话</span>
-                <span class="typeVal">{{yryd.cylxdh}}</span>
-              </li>
-              <li class="clearfix">
-                <span class="typeName">性别</span>
-                <span class="typeVal">{{yryd.xb}}</span>
-              </li>
-              <li class="clearfix">
-                <span class="typeName">证件号码</span>
-                <span class="typeVal">{{yryd.zjhm}}</span>
+                <span class="typeVal">{{yryd.cylxdh || '暂无'}}</span>
               </li>
               <li class="clearfix">
                 <span class="typeName">国籍</span>
@@ -269,7 +279,8 @@
         top: `${-1.041667 * (curCol - 1)}rem`
       }">
         <li class="matchList" v-for="item in helmatList" :key="item.id" :class="{active: item.isActive}" @click="handHelmat(item)">
-          <div class="name">{{item.police.policeName}}</div>
+          <!-- <div class="name">{{item.police.policeName}}</div> -->
+          <div class="name">{{item.userName}}</div>
           <div class="code">{{item.deviceNum}}</div>
         </li>
       </ul>
@@ -285,6 +296,7 @@
 
 <script>
 import { getHelmatList } from 'http'
+require('common/js/video')
 export default {
   data () {
     return {
@@ -299,22 +311,25 @@ export default {
       helmatList: [],
       cols: 1,
       curCol: 1,
-      rtmpUrl: 'rtmp://47.106.10.7:10082/live/456',
+      rtmpUrl: 'url',
+      startLivePlay: false,
       bookingInfo: {
         deviceId: '',
         order: 'openAllMsgPush',
         liveId: ''
-      }
+      },
+      myPlayer: null
     }
   },
   mounted () {
     this.initWebSocket()
     this.getHelmatLists()
-    require('common/js/video')
+    // eslint-disable-next-line
+    this.myPlayer = videojs('my-video')
   },
   methods: {
     initWebSocket () {
-      // this.websocket = new WebSocket('ws://192.168.0.117:8080/websocket.action')
+      // this.websocket = new WebSocket('ws://192.168.0.107:8080/websocket.action')
       this.websocket = new WebSocket('wss://zntk.police.sh.cn/websocket.action')
       this.websocket.onopen = this.websocketOnOpen
       this.websocket.onmessage = this.websocketOnMessage
@@ -323,8 +338,14 @@ export default {
     },
     websocketOnOpen (e) {
       console.log(`open ${e}`)
+      this.closeAllMsgPush()
+      this.$set(this.bookingInfo, 'order', 'openAllMsgPush')
       this.websocketSend(JSON.stringify(this.bookingInfo))
       this.reset()
+    },
+    closeAllMsgPush () {
+      this.$set(this.bookingInfo, 'order', 'closeAllMsgPush')
+      this.websocketSend(JSON.stringify(this.bookingInfo))
     },
     websocketSend (agentData) {
       this.threadPoxi(agentData)
@@ -339,7 +360,11 @@ export default {
       }
     },
     websocketOnMessage (e) {
-      console.log(e.data)
+      try {
+        console.log(e.data)
+      } catch (error) {
+        console.log(1234)
+      }
       if (e.data && e.data.resName !== 'heartBeat') {
         const resData = JSON.parse(e.data) || {}
         if (resData.resName === 'ycyd') {
@@ -348,22 +373,10 @@ export default {
           this.plateNumberDetectShow = true
           this.yryd = {}
           this.eTuList.splice(0)
-          if (resData.ycyd && resData.success) {
-            const obj = resData.ycyd.data
-            for (const key in obj) {
-              this.$set(this.ycyd, key, obj[key])
-            }
-          }
-          if (resData.ycyd && resData.ycyd.wf) {
-            const obj = resData.ycyd.wf.data
-            for (const key in obj) {
-              this.$set(this.ycyd, key, obj[key])
-            }
-          }
-          if (resData.ycyd && resData.ycyd.dj) {
-            const obj = resData.ycyd.dj.data
-            for (const key in obj) {
-              this.$set(this.ycyd, key, obj[key])
+          this.$set(this.ycyd, 'ycydPic', resData.ycydPic)
+          if (resData.ycyd) {
+            for (const key in resData.ycyd) {
+              this.$set(this.ycyd, key, resData.ycyd[key])
             }
           }
         } else if (resData.resName === 'Etu') {
@@ -374,49 +387,49 @@ export default {
           this.yryd = {}
           const faceDetect = {}
           faceDetect.oriPic = resData.oriPic
-          faceDetect.searchPic = resData.etuMsg.image_list[0].user_image
-          faceDetect.similarity = resData.etuPic.similarity
-          // eslint-disable-next-line
-          const str = resData.etuMsg.userInfo.body.replace(/\\/g, '').replace(/\s*/g, '').replace(/\"\{\"/g, '{"').replace(/\}\"\,/g, '},').replace(/\[\,\{/g, '[{')
-          const yryd = JSON.parse(str).data
-          faceDetect.cylxdh = yryd.cylxdh
-          faceDetect.sclhrq = yryd.sclhrq
-          faceDetect.xb = yryd.xb
-          faceDetect.csrq = yryd.csrq
-          faceDetect.zjhm = yryd.zjhm
-          faceDetect.gj = yryd.gj
-          faceDetect.lxdz = yryd.lxdz
-          faceDetect.jzlx = yryd.jzlx
-          faceDetect.sfyztkjl = yryd.sfyztkjl
-          faceDetect.sfyjsbs = yryd.sfyjsbs
-          faceDetect.xm = yryd.xm
-          faceDetect.zdrysfbq = yryd.zdrysfbq
-          this.eTuList.push({})
-          for (let key in faceDetect) {
-            this.$set(this.eTuList[this.eTuList.length - 1], key, faceDetect[key])
+          if (resData.etuMsg.length === 0) {
+            return
           }
+          faceDetect.searchPic = resData.etuMsg[0].image_list[0].user_image
+          faceDetect.similarity = resData.etuMsg[0].similarity_value
+          // eslint-disable-next-line
+          // const str = resData.etuMsg.userInfo.body.replace(/\\/g, '').replace(/\s*/g, '').replace(/\"\{\"/g, '{"').replace(/\}\"\,/g, '},').replace(/\[\,\{/g, '[{')
+          // const yryd = JSON.parse(str).data
+          // faceDetect.cylxdh = yryd.cylxdh
+          // faceDetect.sclhrq = yryd.sclhrq
+          // faceDetect.xb = yryd.xb
+          // faceDetect.csrq = yryd.csrq
+          // faceDetect.zjhm = yryd.zjhm
+          // faceDetect.gj = yryd.gj
+          // faceDetect.lxdz = yryd.lxdz
+          // faceDetect.jzlx = yryd.jzlx
+          // faceDetect.sfyztkjl = yryd.sfyztkjl
+          // faceDetect.sfyjsbs = yryd.sfyjsbs
+          // faceDetect.xm = yryd.xm
+          // faceDetect.zdrysfbq = yryd.zdrysfbq
+          this.eTuList.push(faceDetect)
+          const userInfo = resData.etuMsg[0].userInfo
+          for (let key in userInfo) {
+            this.$set(this.eTuList[this.eTuList.length - 1], key, userInfo[key])
+          }
+          const user = resData.etuMsg[0].user
+          for (let key in user) {
+            this.$set(this.eTuList[this.eTuList.length - 1], key, user[key])
+          }
+          console.log(this.eTuList)
         } else if (resData.resName === 'yryd') {
           this.faceDetectShow = false
           this.IDDetectShow = true
           this.plateNumberDetectShow = false
           this.eTuList.splice(0)
           this.ycyd = {}
-          // eslint-disable-next-line
-          const str = resData.yryd.body.replace(/\\/g, '').replace(/\s*/g, '').replace(/\"\{\"/g, '{"').replace(/\}\"\,/g, '},').replace(/\[\,\{/g, '[{')
-          const yryd = JSON.parse(str).data
-          this.$set(this.yryd, 'cylxdh', yryd.cylxdh)
-          this.$set(this.yryd, 'sclhrq', yryd.sclhrq)
-          this.$set(this.yryd, 'xb', yryd.xb)
-          this.$set(this.yryd, 'csrq', yryd.csrq)
-          this.$set(this.yryd, 'zjhm', yryd.zjhm)
-          this.$set(this.yryd, 'gj', yryd.gj)
-          this.$set(this.yryd, 'lxdz', yryd.lxdz)
-          this.$set(this.yryd, 'jzlx', yryd.jzlx)
-          this.$set(this.yryd, 'sfyztkjl', yryd.sfyztkjl)
-          this.$set(this.yryd, 'sfyjsbs', yryd.sfyjsbs)
-          this.$set(this.yryd, 'xm', yryd.xm)
-          this.$set(this.yryd, 'zdrysfbq', yryd.zdrysfbq)
-          console.log(yryd)
+          this.$set(this.yryd, 'yrydPic', resData.yrydPic)
+          if (resData.yryd) {
+            for (const key in resData.yryd) {
+              this.$set(this.yryd, key, resData.yryd[key])
+            }
+          }
+          // const str = resData.yryd.body.replace(/\\/g, '').replace(/\s*/g, '').replace(/\"\{\"/g, '{"').replace(/\}\"\,/g, '},').replace(/\[\,\{/g, '[{')
         }
       }
     },
@@ -426,6 +439,10 @@ export default {
     },
     websocketOnError (e) {
       console.log(`error ${e}`)
+    },
+    closeLive () {
+      this.$set(this.bookingInfo, 'order', 'liveClose')
+      this.websocketSend(JSON.stringify(this.bookingInfo))
     },
     start () {
       this.heartTimer = setInterval(() => {
@@ -439,6 +456,7 @@ export default {
     getHelmatLists () {
       this.helmatList.splice(0)
       getHelmatList().then(data => {
+        console.log(data.data.obj)
         data.data.obj.forEach(item => {
           item.isActive = false
           this.helmatList.push(item)
@@ -451,10 +469,12 @@ export default {
         ele.isActive = false
       })
       item.isActive = true
-      this.rtmpUrl = `rtmp://47.106.10.7:10082/live/${item.id}`
+      // this.rtmpUrl = `rtmp://47.106.10.7:10082/live/${item.liveId}`
+      this.rtmpUrl = `rtmp://zntk.police.sh.cn:10554/live/${item.liveId}`
+      this.myPlayer.src(this.rtmpUrl)
       this.$set(this.bookingInfo, 'deviceId', item.deviceNum)
       this.$set(this.bookingInfo, 'order', 'live')
-      this.$set(this.bookingInfo, 'liveId', item.id)
+      this.$set(this.bookingInfo, 'liveId', item.liveId)
       this.websocketSend(JSON.stringify(this.bookingInfo))
     },
     lookUp () {
@@ -467,6 +487,15 @@ export default {
       this.curCol++
       if (this.curCol > this.cols) {
         this.curCol = this.cols
+      }
+    }
+  },
+  watch: {
+    rtmpUrl: {
+      handler (newUrl) {
+        if (newUrl) {
+          this.startLivePlay = true
+        }
       }
     }
   }
@@ -534,7 +563,16 @@ export default {
         .readFace
           whb .645833rem, .645833rem, "../../assets/common/images/readFace_bg.png"
           .face
+            position relative
             widthHeight .645833rem, .645833rem
+            border-radius 50%
+            img
+              position absolute
+              top 0
+              left 0
+              width 100%
+              height 100%
+              border-radius 50%
           .detectName
             width .645833rem
             padding-top .052083rem
@@ -557,9 +595,18 @@ export default {
             color #17d1ff
             font-size .083333rem
         .sourceFace
+          position relative
           whb .645833rem, .645833rem, "../../assets/common/images/readFace_bg.png"
           .face
             widthHeight .645833rem, .645833rem
+            border-radius 50%
+            img
+              position absolute
+              top 0
+              left 0
+              width 100%
+              height 100%
+              border-radius 50%
           .detectName
             width .645833rem
             padding-top .052083rem

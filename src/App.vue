@@ -36,6 +36,9 @@ export default {
       width .510417rem
       height 100%
       background url("./assets/common/images/leftMenu_bg.png") 0 0 / 100% 100% no-repeat
+      transition all .5s
+      &.active
+        width 1.041667rem
     .el-main
       padding .078125rem .052083rem .052083rem
 </style>

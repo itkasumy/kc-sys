@@ -4,8 +4,15 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>智能头盔后台控制系统</title>
-    <link href="http://vjs.zencdn.net/5.5.3/video-js.css" rel="stylesheet">
-    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.6&key=d0158ecea85c57072ee50572c3d30ea1"></script>
+    <link rel="stylesheet" href="/static/css/videjs.css">
+    <link rel="stylesheet" href="/static/css/IMap.css">
+    <script src="/static/js/Map.js"></script>
+    <script src="/static/js/main.js"></script>
+    <script src="/static/js/IMapStreetView.js"></script>
+    <script src="/static/js/totenKey.js"></script>
+    <script>
+      // document.write('<script type="text/javascript" src="http://114.215.146.210:25001/as/webapi/js/auth?v=1.0&t=jsmapconfig&ak=ec85d3648154874552835438ac6a02b2"><\/script>');
+    </script>
     <script src="/static/js/sockjs.min.js"></script>
     <style>
       html, body, #app {
@@ -24,6 +31,11 @@
         left: inherit!important;
         bottom: 10px;
         right: 10px;
+      }
+      ::-webkit-scrollbar {  
+        width: 0px;
+        height: 0px;
+        background-color: transparent;
       }
     </style>
     <script>

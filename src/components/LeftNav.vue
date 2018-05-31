@@ -12,6 +12,5 @@ export default {
 
 <style lang="stylus" scoped>
 .narrowNav
-  width .510417rem
   height 100%
 </style>

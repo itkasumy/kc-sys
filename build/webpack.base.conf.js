@@ -94,6 +94,6 @@ module.exports = {
     child_process: 'empty'
   },
   externals: {
-    'AMap': 'AMap'
+    'IMAP': 'IMAP'
   }
 }
